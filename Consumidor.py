@@ -25,14 +25,18 @@ def main():
             print("Opcion invalida, intenta de nuevo\n")
         elif (opcion == ConstantesConsumidor.conectar_consumidor):
             nombre_canal = input("Ingresa el nombre del canal al que te quieres conectar ")
-            envio_MOM = opcion + ' ' + nombre_canal
+            id_canal = input("Ingresa el id del canal al que te quieres conectar ")
+            envio_MOM = opcion + ' ' + nombre_canal + ' ' + id_canal + ' ' + token 
             socket_consumidor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
-            while True:
-                datos_recibidos = socket_consumidor.recv(Constantes.tamaño_buffer)
-                mensaje = datos_recibidos.decode(Constantes.formato_decodificacion)
-                print(mensaje)
-                if (mensaje[len(mensaje)-10:] == "nuevamente"):
-                    break
+            datos_recibidos = socket_consumidor.recv(Constantes.tamaño_buffer)
+            print(datos_recibidos.decode(Constantes.formato_decodificacion))
+        elif (opcion == ConstantesConsumidor.listar_canal):
+            envio_MOM = opcion
+            socket_consumidor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
+            datos_recibidos = socket_consumidor.recv(Constantes.tamaño_buffer)
+            print(datos_recibidos.decode(Constantes.formato_decodificacion))
+            datos_recibidos = socket_consumidor.recv(Constantes.tamaño_buffer)
+            print(datos_recibidos.decode(Constantes.formato_decodificacion))
         elif (opcion.split()[0] == ConstantesConsumidor.registrar):
             envio_MOM = opcion
             socket_consumidor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
@@ -51,6 +55,14 @@ def main():
                 print("Contraseña incorrecta para el proveedor " + opcion.split()[1])
             else:
                 print("No existe un proveedor que se llame " + opcion.split()[1])
+        elif (opcion == ConstantesConsumidor.recibir_mensaje):
+            if(token != ""):
+                nombre_canal = input("Ingresa el nombre del canal del cual quieres recibir un mensaje ")
+                id_canal = input("Ingresa el id del canal del cual quieres recibir un mensaje ")
+                envio_MOM = opcion + ' ' + nombre_canal + ' ' + id_canal + ' ' + token
+                socket_consumidor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
+                datosRecibidos = socket_consumidor.recv(Constantes.tamaño_buffer)
+                print(datosRecibidos.decode(Constantes.formato_decodificacion))
         else:
             print("Opción invalida, intenta de nuevo\n")
 
