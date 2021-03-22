@@ -11,13 +11,20 @@ import ConstantesServidor
 import os.path
 import string
 import random
+from Canal import Canal
 
 class Mom:
 
 	def __init__(self):
-		self.MOMserver = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		self.sesiones = {}
+		self.MOM_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+		self.sesiones = {} #
 		self.contador_tokens = 1
+
+		self.canales = {}
+		self.contador = 0
+		self.consumidores_conectados = {}
+		self.contador_consumidores = 0
 
 	def hilo(self, conexion_aplicacion, direccion_aplicacion):
 		while True:
@@ -51,6 +58,7 @@ class Mom:
 					respuesta = f'Respuesta para: {direccion_aplicacion[0]} no se creo el proveedor porque ya hay un proveedor con ese nombre\n'
 					conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
 					print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
+
 			elif (opcion == ConstantesServidor.conectar):
 				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
 				arreglo_proveedores = self.lista_proveedores()
@@ -75,6 +83,50 @@ class Mom:
 					respuesta = f'Respuesta para: {direccion_aplicacion[0]} no hay un proveedor con el nombre de {arreglo[1]}'
 					conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
 					print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
+
+			elif (opcion == ConstantesServidor.crear_canal):
+				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
+				c_canal = Canal(arreglo[1], arreglo[2], self.contador)
+				self.canales[self.contador] = c_canal
+				respuesta = f'Respuesta para: {direccion_aplicacion[0]} El canal fue creado correctamente\n con el nombre {arreglo[1]} No olvide el token de identificacion del canal: {self.contador}\n'
+				self.contador = self.contador + 1
+				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+				print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
+
+			elif (opcion == ConstantesServidor.listar_canal):
+				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
+				respuesta = f'Respuesta para: {direccion_aplicacion[0]} Listado de canales\n'
+				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+				respuesta = ''
+				if (len(self.canales) == 0):
+					respuesta = 'No hay canales en el MOM\n'
+				else:
+					for canal in self.canales:
+						id_canal = canal
+						if(self.canales[id_canal].get_clave_acceso() == arreglo[1]):
+							respuesta = respuesta + f'Canal {self.canales[id_canal].get_id()}: {self.canales[id_canal].get_nombre()} estado: {self.canales[id_canal].get_estado()}\n'
+
+				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+				print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
+
+			elif (opcion == ConstantesServidor.borrar_canal):
+				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
+				id_canal = arreglo[3]
+				nombre_canal = arreglo[1]
+				clave_acceso = arreglo[2]
+				try:
+					nombre_auxiliar = self.canales[int(id_canal)].get_nombre()
+					clave_auxiliar = self.canales[int(id_canal)].get_clave_acceso()
+					id_auxiliar = self.canales[int(id_canal)].get_id()
+					if (str(id_canal) == str(id_auxiliar) and str(nombre_canal) == str(nombre_auxiliar) and str(
+							clave_auxiliar) == str(clave_acceso)):
+						respuesta = f'Respuesta para: {direccion_aplicacion[0]} El canal fue eliminada correctamente\n'
+						self.canales.pop(int(id_canal))
+				except:
+					respuesta = f'Respuesta para: {direccion_aplicacion[0]} Los datos son incorrectos, prueba nuevamente\n'
+				print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
+				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+
 
 		conexion_aplicacion.close()
 
@@ -110,14 +162,14 @@ class Mom:
 		print('La dirección IP del servidor MOM es: ', Constantes.direccion_conexion_servidor)
 		print('El puerto por el cual está corriendo el servidor MOM es: ', Constantes.puerto)
 		tupla_conexion = (Constantes.direccion_conexion_servidor, Constantes.puerto)
-		self.MOMserver.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-		self.MOMserver.bind(tupla_conexion)
-		self.MOMserver.listen(Constantes.reserva)
+		self.MOM_server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+		self.MOM_server.bind(tupla_conexion)
+		self.MOM_server.listen(Constantes.reserva)
 		while True:
-			conexion_aplicacion, direccion_aplicacion = self.MOMserver.accept()
+			conexion_aplicacion, direccion_aplicacion = self.MOM_server.accept()
 			print(f'Nueva aplicación conectada desde la dirección IP: {direccion_aplicacion[0]}')
 			_thread.start_new_thread(self.hilo, (conexion_aplicacion, direccion_aplicacion))
-		self.MOMserver.close()
+		self.MOM_server.close()
 
 def mom():
 	mom = Mom()

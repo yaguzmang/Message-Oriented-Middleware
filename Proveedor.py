@@ -11,6 +11,7 @@ socket_proveedor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 token = ""
 
 def main():
+    global token
     print('*' * 50)
     print("Estás conectando una nueva aplicación consumidora al MOM\n")
     socket_proveedor.connect((Constantes.direccion_conexion_proveedor, Constantes.puerto))
@@ -27,14 +28,14 @@ def main():
             break
 
         elif (opcion.split()[0] == ConstantesProveedor.registrar):
-            envioMOM = opcion
-            socket_proveedor.send(bytes(envioMOM, Constantes.formato_decodificacion))
+            envio_MOM = opcion
+            socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
             datosRecibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
             print(datosRecibidos.decode(Constantes.formato_decodificacion))
 
         elif (opcion.split()[0] == ConstantesProveedor.conectar):
-            envioMOM = opcion
-            socket_proveedor.send(bytes(envioMOM, Constantes.formato_decodificacion))
+            envio_MOM = opcion
+            socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
             datosRecibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
             respuesta= datosRecibidos.decode(Constantes.formato_decodificacion)
             if(respuesta[0:6] == "token="):
@@ -44,6 +45,30 @@ def main():
                 print("Contraseña incorrecta para el proveedor " + opcion.split()[1])
             else:
                 print("No existe un proveedor que se llame " + opcion.split()[1])
+
+        elif (opcion == ConstantesProveedor.crear_canal):
+            nombre_canal = input("Ingresa el nombre del canal ")
+            envio_MOM = opcion + ' ' + nombre_canal + ' ' + token
+            socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
+            datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
+            print(datos_recibidos.decode(Constantes.formato_decodificacion))
+
+        elif (opcion == ConstantesProveedor.listar_canal):
+            envio_MOM = opcion +' '+ token
+            socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
+            datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
+            print(datos_recibidos.decode(Constantes.formato_decodificacion))
+            datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
+            print(datos_recibidos.decode(Constantes.formato_decodificacion))
+
+        elif (opcion == ConstantesProveedor.borrar_canal):
+            nombre_canal = input("Ingresa el nombre del canal a eliminar ")
+            id_canal = input("Ingresa el token de identificacion del canal a eliminar ")
+            envio_MOM = opcion + ' ' + nombre_canal + ' ' + token + ' ' + id_canal
+            socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
+            datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
+            print(datos_recibidos.decode(Constantes.formato_decodificacion))
+
         else:
             print("Opcion invalida, intenta de nuevo\n")
             opcion = menu()
@@ -51,6 +76,9 @@ def main():
 def menu():
     print("OPCION REGISTRAR: Para registrar un nuevo proveedor ingresa REGISTRAR nombre_proveedor contraseña_proveedor")
     print("OPCION CONECTAR: Para conectarse como proveedor ingresa CONECTAR nombre_proveedor contraseña_proveedor")
+    print("OPCION CREAR_CANAL: Crear un nuevo canal")
+    print("OPCION LISTAR_CANAL: Listado de canales en el MOM")
+    print("OPCION BORRAR_CANAL: Eliminar un canal del MOM")
     print("OPCION SALIR: Desconectar aplicación")
     opcion = input("Ingrece la opcion que quiere realizar ")
     while(not(str(opcion).split()[0] in ConstantesProveedor.constantes_proveedor)):
