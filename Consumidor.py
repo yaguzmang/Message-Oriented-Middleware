@@ -20,7 +20,7 @@ def main():
     opcion = menu()
 
     while opcion != ConstantesConsumidor.salir:
-        opcion = menu()
+        
         if opcion == '':
             print("Opcion invalida, intenta de nuevo\n")
         elif (opcion == ConstantesConsumidor.conectar_consumidor):
@@ -65,6 +65,7 @@ def main():
                 print(datosRecibidos.decode(Constantes.formato_decodificacion))
         else:
             print("Opción invalida, intenta de nuevo\n")
+        opcion = menu()
 
     socket_consumidor.send(bytes(opcion, Constantes.formato_decodificacion))
     datos_recibidos = socket_consumidor.recv(Constantes.tamaño_buffer)
