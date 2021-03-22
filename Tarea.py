@@ -7,10 +7,11 @@ from collections import deque
 
 class Tarea:
 
-	def __init__(self, nombre, clave_acceso, id_tarea):
+	#def __init__(self, nombre, clave_acceso, id_tarea):
+	def __init__(self, nombre, id_tarea):
 		self.id = id_tarea
 		self.nombre = nombre
-		self.clave_acceso = clave_acceso
+		#self.clave_acceso = clave_acceso
 		self.estado = True
 		self.servers = []
 		self.estado_servers = []
@@ -43,9 +44,6 @@ class Tarea:
 	def cambiar_indice_envio(self):
 		mensaje = self.tareas.popleft()
 		return mensaje
-
-	def get_clave_acceso(self):
-		return self.clave_acceso
 
 	def get_id(self):
 		return self.id

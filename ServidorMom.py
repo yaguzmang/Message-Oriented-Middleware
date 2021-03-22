@@ -23,7 +23,7 @@ class Mom:
 		self.contador_tokens = 1
 
 		self.canales = {}
-		self.tareas = {}
+		self.tareas = []
 		self.contador = 0
 		self.contador_tareas = 0
 		self.consumidores_conectados = {}
@@ -160,10 +160,11 @@ class Mom:
 
 			elif (opcion == ConstantesServidor.crear_tarea):
 				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
-				c_tarea = Tarea(arreglo[1], arreglo[2], self.contador)
-				self.tareas[self.contador_tareas] = c_canal
+				#c_tarea = Tarea(arreglo[1], arreglo[2], self.contador)
+				c_tarea = Tarea(arreglo[1], self.contador_tareas)
+				self.tareas.append(c_tarea)
 				respuesta = f'Respuesta para: {direccion_aplicacion[0]} La tarea fue creada correctamente\n con el nombre {arreglo[1]} No olvide el token de identificacion de la tarea: {self.contador_tareas}\n'
-				self.contador = self.contador + 1
+				self.contador_tareas = self.contador_tareas + 1
 				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
 				print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
 

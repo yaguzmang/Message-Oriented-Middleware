@@ -54,8 +54,8 @@ def main():
             print(datos_recibidos.decode(Constantes.formato_decodificacion))
 
         elif (opcion == ConstantesProveedor.crear_tarea):
-            nombre_canal = input("Ingresa el nombre de la tarea")
-            envio_MOM = opcion + ' ' + nombre_canal + ' ' + token
+            nombre_tarea = input("Ingresa el nombre de la tarea ")
+            envio_MOM = opcion + ' ' + nombre_tarea + ' ' + token
             socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
             datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
             print(datos_recibidos.decode(Constantes.formato_decodificacion))
