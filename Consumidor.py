@@ -33,21 +33,41 @@ def main():
                 print(mensaje)
                 if (mensaje[len(mensaje)-10:] == "nuevamente"):
                     break
+        elif (opcion.split()[0] == ConstantesConsumidor.registrar):
+            envio_MOM = opcion
+            socket_consumidor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
+            datosRecibidos = socket_consumidor.recv(Constantes.tamaño_buffer)
+            print(datosRecibidos.decode(Constantes.formato_decodificacion))
+
+        elif (opcion.split()[0] == ConstantesConsumidor.conectar):
+            envio_MOM = opcion
+            socket_consumidor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
+            datosRecibidos = socket_consumidor.recv(Constantes.tamaño_buffer)
+            respuesta= datosRecibidos.decode(Constantes.formato_decodificacion)
+            if(respuesta[0:6] == "token="):
+                token = respuesta[6:]
+                print("Bienvenido "+ opcion.split()[1])
+            elif(respuesta == "Contraseña incorrecta"):
+                print("Contraseña incorrecta para el proveedor " + opcion.split()[1])
+            else:
+                print("No existe un proveedor que se llame " + opcion.split()[1])
         else:
             print("Opción invalida, intenta de nuevo\n")
 
-    socket_consumidor.send(bytes(opcion, Constantes.formato_decodificacio))
+    socket_consumidor.send(bytes(opcion, Constantes.formato_decodificacion))
     datos_recibidos = socket_consumidor.recv(Constantes.tamaño_buffer)
     print(datos_recibidos.decode(Constantes.formato_decodificacion))
     socket_consumidor.close()
 
 
 def menu():
-	print("OPCION LISTAR: Listado de Colas en el MOM")
-	print("OPCION CONECTAR-CONSUMIDOR: Conexión a una Cola del MOM")
-	print("OPCION SALIR: Desconectar aplicación")
-	opcion = input("Ingrese la opcion que quiere realizar ")
-	return opcion
+    print("OPCION REGISTRAR_CONSUMIDOR: Para registrar un nuevo proveedor ingresa REGISTRAR_CONSUMIDOR nombre_proveedor contraseña_proveedor")
+    print("OPCION CONECTAR_CONSUMIDOR: Para conectarse como proveedor ingresa CONECTAR_CONSUMIDOR nombre_proveedor contraseña_proveedor")
+    print("OPCION LISTAR: Listado de Colas en el MOM")
+    print("OPCION CONECTAR_CONSUMIDOR_CANAL: Conexión a una Cola del MOM")
+    print("OPCION SALIR: Desconectar aplicación")
+    opcion = input("Ingrese la opcion que quiere realizar ")
+    return opcion
 
 
 if __name__ == '__main__':
