@@ -9,12 +9,12 @@ from collections import deque
 
 class Canal:
 
-	def __init__(self, nombre, clave_acceso, id_canal):
+	def __init__(self, nombre, token_proveedor, id_canal):
 		self.id = id_canal
 		self.nombre = nombre
-		self.clave_acceso = clave_acceso
+		self.token_proveedor = token_proveedor
 		self.estado = True
-		self.consumidores = []
+		self.consumidores = {}
 		self.estado_consumidores = []
 		self.canal = deque()
 
@@ -46,8 +46,8 @@ class Canal:
 		mensaje = self.canal.popleft()
 		return mensaje
 
-	def get_clave_acceso(self):
-		return self.clave_acceso
+	def get_token_proveedor(self):
+		return self.token_proveedor
 
 	def get_id(self):
 		return self.id

@@ -103,7 +103,7 @@ class Mom:
 				else:
 					for canal in self.canales:
 						id_canal = canal
-						if(self.canales[id_canal].get_clave_acceso() == arreglo[1]):
+						if(self.canales[id_canal].get_token_proveedor() == arreglo[1]):
 							respuesta = respuesta + f'Canal {self.canales[id_canal].get_id()}: {self.canales[id_canal].get_nombre()} estado: {self.canales[id_canal].get_estado()}\n'
 
 				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
@@ -116,7 +116,7 @@ class Mom:
 				clave_acceso = arreglo[2]
 				try:
 					nombre_auxiliar = self.canales[int(id_canal)].get_nombre()
-					clave_auxiliar = self.canales[int(id_canal)].get_clave_acceso()
+					clave_auxiliar = self.canales[int(id_canal)].get_token_proveedor()
 					id_auxiliar = self.canales[int(id_canal)].get_id()
 					if (str(id_canal) == str(id_auxiliar) and str(nombre_canal) == str(nombre_auxiliar) and str(
 							clave_auxiliar) == str(clave_acceso)):
