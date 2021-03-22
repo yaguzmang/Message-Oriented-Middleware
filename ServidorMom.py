@@ -14,7 +14,7 @@ import os.path
 import string
 import random
 from Canal import Canal
-
+from Tarea import Tarea
 class Mom:
 
 	def __init__(self):
@@ -25,7 +25,9 @@ class Mom:
 		self.contador_tokens = 1
 
 		self.canales = {}
+		self.tareas = []
 		self.contador = 0
+		self.contador_tareas = 0
 		self.consumidores_conectados = {}
 		self.contador_consumidores = 0
 
@@ -159,6 +161,33 @@ class Mom:
 						respuesta = f'Respuesta para: {direccion_aplicacion[0]} Usted no posee canales\n'
 				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
 				print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
+
+			elif (opcion == ConstantesServidor.crear_tarea):
+				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
+				#c_tarea = Tarea(arreglo[1], arreglo[2], self.contador)
+				c_tarea = Tarea(arreglo[1], self.contador_tareas)
+				self.tareas.append(c_tarea)
+				respuesta = f'Respuesta para: {direccion_aplicacion[0]} La tarea fue creada correctamente\n con el nombre {arreglo[1]} No olvide el token de identificacion de la tarea: {self.contador_tareas}\n'
+				self.contador_tareas = self.contador_tareas + 1
+				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+				print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
+
+			elif (opcion == ConstantesServidor.listar_tareas_cola):
+				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
+				respuesta = f'Respuesta para: {direccion_aplicacion[0]} Listado de tareas\n'
+				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+				respuesta = ''
+				if (len(self.tareas) == 0):
+					respuesta = 'No hay tareas en el MOM\n'
+				else:
+					for tarea in self.tareas:
+						id_tarea = tarea
+						if(self.tareas[id_tarea].get_clave_acceso() == arreglo[1]):
+							respuesta = respuesta + f'Tarea {self.tareas[id_tarea].get_id()}: {self.tareas[id_tarea].get_nombre()}\n'
+
+				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+				print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
+
 			elif (opcion == ConstantesServidor.borrar_canal):
 				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
 				id_canal = arreglo[2]
