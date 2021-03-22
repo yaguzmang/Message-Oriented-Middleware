@@ -73,7 +73,7 @@ def main():
             nombre_canal = input("Ingresa el nombre del canal al cual enviará el mensaje ")
             id_canal = input("Ingresa el id del canal al cual enviará el mensaje ")
             mensaje = input("Ingresa el mensaje que quiere enviar ")
-            envio_MOM = opcion + ' ' + nombre_canal + ' ' + id_canal + ' ' + mensaje + ' ' + token
+            envio_MOM = opcion + ' ' + nombre_canal + ' ' + id_canal + ' ' + token + ' ' + mensaje 
             socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
             datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
             print(datos_recibidos.decode(Constantes.formato_decodificacion))
