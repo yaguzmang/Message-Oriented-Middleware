@@ -15,7 +15,6 @@ class Canal:
 		self.token_proveedor = token_proveedor
 		self.estado = True
 		self.consumidores = {}
-		self.estado_consumidores = []
 		self.canal = deque()
 
 	def get_consumidores(self):
@@ -24,27 +23,8 @@ class Canal:
 	def set_consumidores(self, arreglo):
 		self.consumidores = arreglo
 
-	def actualizar_todos_consumidores(self):
-		for i in range(0,len(self.estado_consumidores)):
-			self.estado_consumidores[i] = False
-
-	def agregar_consumidor(self, cliente):
-		self.consumidores.append(cliente)
-		self.estado_consumidores.append(False)
-
-	def cambiar_estado_consumidor(self,i):
-		self.estado_consumidores[i] = True
-
-	def get_estados_consumidores(self):
-		return self.estado_consumidores
-
-	def set_estados_consumidores(self, arreglo):
-		self.estado_consumidores = arreglo
-
-
-	def cambiar_indice_envio(self):
-		mensaje = self.canal.popleft()
-		return mensaje
+	def agregar_consumidor(self, token_consumidor):
+		self.consumidores[token_consumidor] = []
 
 	def get_token_proveedor(self):
 		return self.token_proveedor

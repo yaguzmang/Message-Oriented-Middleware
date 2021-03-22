@@ -53,7 +53,22 @@ def main():
             datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
             print(datos_recibidos.decode(Constantes.formato_decodificacion))
 
+        elif (opcion == ConstantesProveedor.crear_tarea):
+            nombre_tarea = input("Ingresa el nombre de la tarea ")
+            envio_MOM = opcion + ' ' + nombre_tarea + ' ' + token
+            socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
+            datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
+            print(datos_recibidos.decode(Constantes.formato_decodificacion))
+
         elif (opcion == ConstantesProveedor.listar_canal):
+            envio_MOM = opcion +' '+ token
+            socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
+            datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
+            print(datos_recibidos.decode(Constantes.formato_decodificacion))
+            datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
+            print(datos_recibidos.decode(Constantes.formato_decodificacion))
+
+        elif (opcion == ConstantesProveedor.listar_tareas_cola):
             envio_MOM = opcion +' '+ token
             socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
             datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
@@ -63,12 +78,20 @@ def main():
 
         elif (opcion == ConstantesProveedor.borrar_canal):
             nombre_canal = input("Ingresa el nombre del canal a eliminar ")
-            id_canal = input("Ingresa el token de identificacion del canal a eliminar ")
-            envio_MOM = opcion + ' ' + nombre_canal + ' ' + token + ' ' + id_canal
+            id_canal = input("Ingresa el id del canal a eliminar ")
+            envio_MOM = opcion + ' ' + nombre_canal + ' ' + id_canal + ' ' + token
             socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
             datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
             print(datos_recibidos.decode(Constantes.formato_decodificacion))
-
+        
+        elif (opcion == ConstantesProveedor.enviar_mensaje):
+            nombre_canal = input("Ingresa el nombre del canal al cual enviará el mensaje ")
+            id_canal = input("Ingresa el id del canal al cual enviará el mensaje ")
+            mensaje = input("Ingresa el mensaje que quiere enviar ")
+            envio_MOM = opcion + ' ' + nombre_canal + ' ' + id_canal + ' ' + mensaje + ' ' + token
+            socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
+            datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
+            print(datos_recibidos.decode(Constantes.formato_decodificacion))
         else:
             print("Opcion invalida, intenta de nuevo\n")
             opcion = menu()
@@ -79,6 +102,8 @@ def menu():
     print("OPCION CREAR_CANAL: Crear un nuevo canal")
     print("OPCION LISTAR_CANAL: Listado de canales en el MOM")
     print("OPCION BORRAR_CANAL: Eliminar un canal del MOM")
+    print("OPCION CREAR_TAREA: Crear una nueva tarea")
+    print("OPCION LISTAR_TAREAS_COLA: Listado de las tareas en cola en el MOM")
     print("OPCION SALIR: Desconectar aplicación")
     opcion = input("Ingrece la opcion que quiere realizar ")
     while(not(str(opcion).split()[0] in ConstantesProveedor.constantes_proveedor)):
