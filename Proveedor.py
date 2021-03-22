@@ -13,7 +13,7 @@ token = ""
 def main():
     global token
     print('*' * 50)
-    print("Estás conectando una nueva aplicación consumidora al MOM\n")
+    print("Estás conectando una nueva aplicación proveedora al MOM\n")
     socket_proveedor.connect((Constantes.direccion_conexion_proveedor, Constantes.puerto))
     tupla_conexion = socket_proveedor.getsockname()
     print("Tu dirección de conexión es: ", tupla_conexion)
@@ -99,7 +99,7 @@ def menu():
     print("OPCION SALIR: Desconectar aplicación")
     opcion = input("Ingrece la opcion que quiere realizar ")
     while(not(str(opcion).split()[0] in ConstantesProveedor.constantes_proveedor)):
-        opcion = input("Ingrece la opcion que quiere realizar ")
+        opcion = input("Ingrese la opcion que quiere realizar ")
     return opcion
 
 

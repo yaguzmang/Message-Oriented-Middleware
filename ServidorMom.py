@@ -18,7 +18,8 @@ class Mom:
 	def __init__(self):
 		self.MOM_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-		self.sesiones = {} #
+		self.sesiones = {} # este es el de proveedores
+		self.sesiones_consumidor = {}
 		self.contador_tokens = 1
 
 		self.canales = {}
@@ -41,6 +42,7 @@ class Mom:
 				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
 				print(f'La aplicación {direccion_aplicacion[0]}:{direccion_aplicacion[1]} se desconectó correctamente')
 				break
+			# loggin y registro para proveedores
 			elif(opcion == ConstantesServidor.registrar):
 				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
 				arreglo_proveedores = self.lista_proveedores()
@@ -85,6 +87,51 @@ class Mom:
 					respuesta = f'Respuesta para: {direccion_aplicacion[0]} no hay un proveedor con el nombre de {arreglo[1]}'
 					conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
 					print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
+			# loggin y registro para consumidores
+			elif (opcion == ConstantesServidor.registrar_consumidor):
+				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
+				arreglo_consumidores = self.lista_consumidores()
+				consumidor_exixtente, igual_clave = self.proveedor_repetido(arreglo_consumidores, arreglo[1], arreglo[2])
+				if (not (consumidor_exixtente)):
+					print(f'el nombre del proveedor es: {arreglo[1]} \ncon contraseña: {arreglo[2]}')
+					txt = str("\n" + arreglo[1] + "->" + arreglo[2])
+					f = open('consumidores.txt', 'a')
+					f.write(txt)
+					f.close()
+					respuesta = f'Respuesta para: {direccion_aplicacion[0]} se creo correctamente el consumidor\n'
+					conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+					print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
+				else:
+					print(f'El nombre del consumidor es: {arreglo[1]}')
+					print("No se creo el consumidor porque ya hay un proveedor con ese nombre")
+					respuesta = f'Respuesta para: {direccion_aplicacion[0]} no se creo el consumidor porque ya hay un consumidor con ese nombre\n'
+					conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+					print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
+
+			elif (opcion == ConstantesServidor.conectar_consumidor):
+				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
+				arreglo_consumidores = self.lista_consumidores()
+				consumidor_exixtente, igual_clave = self.proveedor_repetido(arreglo_consumidores, arreglo[1], arreglo[2])
+				if (consumidor_exixtente):
+					if (igual_clave):
+						if (not (arreglo[1] in self.sesiones_consumidor)):
+							token = self.random_char(self.contador_tokens)
+							self.sesiones_consumidor[arreglo[1]] = token
+						print(f'Al consumidor: {arreglo[1]} se le asigno el token: {self.sesiones_consumidor[arreglo[1]]}')
+						respuesta = f'token={self.sesiones_consumidor[arreglo[1]]}'
+						conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+						print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
+						self.contador_tokens += 1
+					else:
+						print(f'Contraseña incorrecta para el consumidor: {arreglo[1]}')
+						respuesta = f'Contraseña incorrecta'
+						conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+						print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
+				else:
+					print(f'No esxiste un consumidor con nombre: {arreglo[1]}')
+					respuesta = f'Respuesta para: {direccion_aplicacion[0]} no hay un consumidor con el nombre de {arreglo[1]}'
+					conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+					print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
 
 			elif (opcion == ConstantesServidor.crear_canal):
 				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
@@ -105,7 +152,7 @@ class Mom:
 				else:
 					for canal in self.canales:
 						id_canal = canal
-						if(self.canales[id_canal].get_clave_acceso() == arreglo[1]):
+						if(self.canales[id_canal].get_token_proveedor() == arreglo[1]):
 							respuesta = respuesta + f'Canal {self.canales[id_canal].get_id()}: {self.canales[id_canal].get_nombre()} estado: {self.canales[id_canal].get_estado()}\n'
 
 				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
@@ -143,7 +190,7 @@ class Mom:
 				clave_acceso = arreglo[2]
 				try:
 					nombre_auxiliar = self.canales[int(id_canal)].get_nombre()
-					clave_auxiliar = self.canales[int(id_canal)].get_clave_acceso()
+					clave_auxiliar = self.canales[int(id_canal)].get_token_proveedor()
 					id_auxiliar = self.canales[int(id_canal)].get_id()
 					if (str(id_canal) == str(id_auxiliar) and str(nombre_canal) == str(nombre_auxiliar) and str(
 							clave_auxiliar) == str(clave_acceso)):
@@ -158,7 +205,7 @@ class Mom:
 		conexion_aplicacion.close()
 
 	def random_char(self,y):
-		if (y>15):
+		if (y>20):
 			self.contador_tokens = 2
 			y=2
 		return ''.join(random.choice(string.ascii_letters) for x in range(y))
@@ -171,6 +218,15 @@ class Mom:
 		arreglo_proveedores = f.readlines()
 		f.close()
 		return arreglo_proveedores
+
+	def lista_consumidores(self):
+		if (not (os.path.isfile("consumidores.txt"))):
+			f = open('consumidores.txt', 'w')
+			f.close()
+		f = open('consumidores.txt', 'r')
+		arreglo_consumidores = f.readlines()
+		f.close()
+		return arreglo_consumidores
 
 	def proveedor_repetido(self, arreglo_proveedores,nuevo_proveedor,clave_proveedor):
 		proveedor_exixtente = False

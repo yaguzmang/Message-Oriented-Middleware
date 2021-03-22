@@ -7,6 +7,8 @@ Created on Created on Sun Mar 21 2021
 salir = "SALIR"
 registrar = "REGISTRAR"
 conectar = "CONECTAR"
+registrar_consumidor = "REGISTRAR_CONSUMIDOR"
+conectar_consumidor = "CONECTAR_CONSUMIDOR"
 crear_canal = "CREAR_CANAL"
 crear_tarea = "CREAR_TAREA"
 listar_canal = "LISTAR_CANAL"
