@@ -26,6 +26,7 @@ class Mom:
 
 		self.canales = {}
 		self.tareas = []
+		self.tareas_realizadas = []
 		self.contador = 0
 		self.contador_tareas = 0
 		self.consumidores_conectados = {}
@@ -161,7 +162,6 @@ class Mom:
 
 			elif (opcion == ConstantesServidor.crear_tarea):
 				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
-				#c_tarea = Tarea(arreglo[1], arreglo[2], self.contador)
 				c_tarea = Tarea(arreglo[1], self.contador_tareas)
 				self.tareas.append(c_tarea)
 				respuesta = f'Respuesta para: {direccion_aplicacion[0]} La tarea fue creada correctamente\n con el nombre {arreglo[1]} No olvide el token de identificacion de la tarea: {self.contador_tareas}\n'
@@ -169,7 +169,7 @@ class Mom:
 				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
 				print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
 
-			elif (opcion == ConstantesServidor.listar_tareas_cola):
+			elif (opcion == ConstantesServidor.listar_tareas):
 				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
 				respuesta = f'Respuesta para: {direccion_aplicacion[0]} Listado de tareas\n'
 				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
@@ -178,9 +178,7 @@ class Mom:
 					respuesta = 'No hay tareas en el MOM\n'
 				else:
 					for tarea in self.tareas:
-						id_tarea = tarea
-						if(self.tareas[id_tarea].get_clave_acceso() == arreglo[1]):
-							respuesta = respuesta + f'Tarea {self.tareas[id_tarea].get_id()}: {self.tareas[id_tarea].get_nombre()}\n'
+						respuesta = respuesta + f'Tarea {tarea.get_id()}: {tarea.get_nombre()}\n'
 
 				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
 				print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
@@ -218,7 +216,7 @@ class Mom:
 				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
 				print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
 			elif (opcion == ConstantesConsumidor.conectar_consumidor):
-				print(f'{direccion_proveedor[0]} solicita: {opcion}')
+				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
 				nombre_canal = arreglo[1]
 				id_canal = arreglo[2]
 				token_consumidor = arreglo[3]
@@ -227,15 +225,15 @@ class Mom:
 					nombre_auxiliar = self.canales[int(id_canal)].get_nombre()
 					id_auxiliar = self.canales[int(id_canal)].get_id()
 					if (str(id_canal) == str(id_auxiliar) and str(nombre_canal) == str(nombre_auxiliar)):
-						respuesta = f'Respuesta para: {direccion_proveedor[0]} La conexión se estableció correctamente, ahora puedes recibir mensajes de este canal\n'
-						conexion_aplicacion.sendall(respuesta.encode(constants.ENCODING_FORMAT))
+						respuesta = f'Respuesta para: {direccion_aplicacion[0]} La conexión se estableció correctamente, ahora puedes recibir mensajes de este canal\n'
+						conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
 						self.canales[int(id_canal)].agregar_consumidor(token_consumidor)
 				except:
-					respuesta = f'Respuesta para: {direccion_proveedor[0]} No hay conexión, prueba nuevamente\n'
-					conexion_aplicacion.sendall(respuesta.encode(constants.ENCODING_FORMAT))
-				print(f'Se envio respuesta a: {direccion_proveedor[0]} por la solicitud: {opcion}')
+					respuesta = f'Respuesta para: {direccion_aplicacion[0]} No hay conexión, prueba nuevamente\n'
+					conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+				print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
 			elif (opcion == ConstantesProveedor.enviar_mensaje):
-				print(f'{direccion_proveedor[0]} solicita: {opcion}')
+				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
 				nombre_canal = arreglo[1]
 				id_canal = arreglo[2]
 				mensaje = arreglo[3]
@@ -249,14 +247,14 @@ class Mom:
 						consumidores = self.canales[int(id_canal)].get_consumidores()
 						for clave in consumidores.keys():
 							consumidores[clave].append(mensaje)
-						respuesta = f'Respuesta para: {direccion_proveedor[0]} El mensaje se transmitió correctamente al canal elegido\n'
-						conexion_aplicacion.sendall(respuesta.encode(constants.ENCODING_FORMAT))
+						respuesta = f'Respuesta para: {direccion_aplicacion[0]} El mensaje se transmitió correctamente al canal elegido\n'
+						conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
 				except:
-					respuesta = f'Respuesta para: {direccion_proveedor[0]} No hay conexión, prueba nuevamente\n'
-					conexion_aplicacion.sendall(respuesta.encode(constants.ENCODING_FORMAT))
-				print(f'Se envio respuesta a: {direccion_proveedor[0]} por la solicitud: {opcion}')
+					respuesta = f'Respuesta para: {direccion_aplicacion[0]} No hay conexión, prueba nuevamente\n'
+					conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+				print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
 			elif (opcion == ConstantesConsumidor.recibir_mensaje):
-				print(f'{direccion_proveedor[0]} solicita: {opcion}')
+				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
 				nombre_canal = arreglo[1]
 				id_canal = arreglo[2]
 				token_consumidor = arreglo[3]
@@ -268,18 +266,18 @@ class Mom:
 						consumidores = self.canales[int(id_canal)].get_consumidores()
 						if (token_consumidor in consumidores):
 							if (len(consumidores[token_consumidor]) != 0):
-								respuesta = f'Respuesta para: {direccion_proveedor[0]} El mensaje es: {consumidores[token_consumidor].pop(0)}\n'
+								respuesta = f'Respuesta para: {direccion_aplicacion[0]} El mensaje es: {consumidores[token_consumidor].pop(0)}\n'
 							else:
-								respuesta = f'Respuesta para: {direccion_proveedor[0]} No hay nuevos mensajes\n'
+								respuesta = f'Respuesta para: {direccion_aplicacion[0]} No hay nuevos mensajes\n'
 						else:
-							respuesta = f'Respuesta para: {direccion_proveedor[0]} Usted no se encuentra suscrito en este canal\n'
+							respuesta = f'Respuesta para: {direccion_aplicacion[0]} Usted no se encuentra suscrito en este canal\n'
 					else:
-						respuesta = f'Respuesta para: {direccion_proveedor[0]} Datos erroneos, intente nuevamente\n'
-					conexion_aplicacion.sendall(respuesta.encode(constants.ENCODING_FORMAT))
+						respuesta = f'Respuesta para: {direccion_aplicacion[0]} Datos erroneos, intente nuevamente\n'
+					conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
 				except:
-					respuesta = f'Respuesta para: {direccion_proveedor[0]} No hay conexión, prueba nuevamente\n'
-					conexion_aplicacion.sendall(respuesta.encode(constants.ENCODING_FORMAT))
-				print(f'Se envio respuesta a: {direccion_proveedor[0]} por la solicitud: {opcion}')
+					respuesta = f'Respuesta para: {direccion_aplicacion[0]} No hay conexión, prueba nuevamente\n'
+					conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+				print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
 					
 		conexion_aplicacion.close()
 
