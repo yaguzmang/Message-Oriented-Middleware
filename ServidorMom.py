@@ -36,6 +36,8 @@ class Mom:
 		while True:
 			datos_recibidos = conexion_aplicacion.recv(1024)
 			datos_recibidos = str(datos_recibidos.decode("utf-8"))
+			print("."*80)
+			print(datos_recibidos)
 			arreglo = datos_recibidos.split()
 			opcion = arreglo[0]
 
@@ -234,8 +236,9 @@ class Mom:
 					respuesta = respuesta + f'{tarea.get_id()}:{tarea.get_nombre()}\n'
 
 				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+				#conexion_aplicacion.close()
 				print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
-
+				break
 			elif (opcion == ConstantesServidor.tarea_realizada):
 				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
 				respuesta = f'Respuesta para: {direccion_aplicacion[0]} Mensaje recibido\n'

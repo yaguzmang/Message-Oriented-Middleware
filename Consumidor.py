@@ -94,6 +94,7 @@ def main():
 
 
 def menu():
+    print("*"*50)
     print("OPCION REGISTRAR_CONSUMIDOR: Para registrar un nuevo proveedor ingresa REGISTRAR_CONSUMIDOR nombre_proveedor contraseña_proveedor")
     print("OPCION CONECTAR_CONSUMIDOR: Para conectarse como proveedor ingresa CONECTAR_CONSUMIDOR nombre_proveedor contraseña_proveedor")
     if (token != ""):
@@ -101,6 +102,7 @@ def menu():
         print("OPCION CONECTAR_CONSUMIDOR_CANAL: Conexión a una Cola del MOM")
         print("OPCION DESCONECTAR_CONSUMIDOR: Desconectar consumidor")
         print("OPCION SALIR: Desconectar aplicación")
+    print("*"*50)
     opcion = input("Ingrese la opcion que quiere realizar ")
     return opcion
 
