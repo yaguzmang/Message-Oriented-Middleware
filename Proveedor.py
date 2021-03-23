@@ -46,12 +46,27 @@ def main():
             else:
                 print("No existe un proveedor que se llame " + opcion.split()[1])
 
+        elif (opcion.split()[0] == ConstantesProveedor.desconectar):
+            if (token != ""):
+                envio_MOM = opcion + " " + token
+                token = ""
+                socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
+                datosRecibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
+                respuesta = datosRecibidos.decode(Constantes.formato_decodificacion)
+                print(respuesta)
+            else:
+                print("Debe logearse primero\n")
+
         elif (opcion == ConstantesProveedor.crear_canal):
-            nombre_canal = input("Ingresa el nombre del canal ")
-            envio_MOM = opcion + ' ' + nombre_canal + ' ' + token
-            socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
-            datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
-            print(datos_recibidos.decode(Constantes.formato_decodificacion))
+            if (token != ""):
+                envio_MOM = opcion + ' ' + token
+                nombre_canal = input("Ingresa el nombre del canal ")
+                envio_MOM = opcion + ' ' + nombre_canal + ' ' + token
+                socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
+                datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
+                print(datos_recibidos.decode(Constantes.formato_decodificacion))
+            else:
+                print("Debe logearse primero\n")
 
         elif (opcion == ConstantesProveedor.crear_tarea):
             if(token != ""):
@@ -64,12 +79,15 @@ def main():
                 print("Debe logearse primero\n")
 
         elif (opcion == ConstantesProveedor.listar_canal):
-            envio_MOM = opcion +' '+ token
-            socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
-            datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
-            print(datos_recibidos.decode(Constantes.formato_decodificacion))
-            datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
-            print(datos_recibidos.decode(Constantes.formato_decodificacion))
+            if (token != ""):
+                envio_MOM = opcion + ' ' + token
+                socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
+                datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
+                print(datos_recibidos.decode(Constantes.formato_decodificacion))
+                datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
+                print(datos_recibidos.decode(Constantes.formato_decodificacion))
+            else:
+                print("Debe logearse primero\n")
 
         elif (opcion == ConstantesProveedor.listar_tareas):
             if(token != ""):
@@ -82,35 +100,55 @@ def main():
             else:
                 print("Debe logearse primero\n")
 
+        elif (opcion == ConstantesProveedor.listar_tareas_r):
+            if(token != ""):
+                envio_MOM = opcion +' '+ token
+                socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
+                datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
+                print(datos_recibidos.decode(Constantes.formato_decodificacion))
+                datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
+                print(datos_recibidos.decode(Constantes.formato_decodificacion))
+            else:
+                print("Debe logearse primero\n")
+
         elif (opcion == ConstantesProveedor.borrar_canal):
-            nombre_canal = input("Ingresa el nombre del canal a eliminar ")
-            id_canal = input("Ingresa el id del canal a eliminar ")
-            envio_MOM = opcion + ' ' + nombre_canal + ' ' + id_canal + ' ' + token
-            socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
-            datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
-            print(datos_recibidos.decode(Constantes.formato_decodificacion))
+            if (token != ""):
+                envio_MOM = opcion + ' ' + token
+                nombre_canal = input("Ingresa el nombre del canal a eliminar ")
+                id_canal = input("Ingresa el id del canal a eliminar ")
+                envio_MOM = opcion + ' ' + nombre_canal + ' ' + id_canal + ' ' + token
+                socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
+                datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
+                print(datos_recibidos.decode(Constantes.formato_decodificacion))
+            else:
+                print("Debe logearse primero\n")
         
         elif (opcion == ConstantesProveedor.enviar_mensaje):
-            nombre_canal = input("Ingresa el nombre del canal al cual enviará el mensaje ")
-            id_canal = input("Ingresa el id del canal al cual enviará el mensaje ")
-            mensaje = input("Ingresa el mensaje que quiere enviar ")
-            envio_MOM = opcion + ' ' + nombre_canal + ' ' + id_canal + ' ' + token + ' ' + mensaje 
-            socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
-            datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
-            print(datos_recibidos.decode(Constantes.formato_decodificacion))
+            if (token != ""):
+                envio_MOM = opcion + ' ' + token
+                nombre_canal = input("Ingresa el nombre del canal al cual enviará el mensaje ")
+                id_canal = input("Ingresa el id del canal al cual enviará el mensaje ")
+                mensaje = input("Ingresa el mensaje que quiere enviar ")
+                envio_MOM = opcion + ' ' + nombre_canal + ' ' + id_canal + ' ' + token + ' ' + mensaje
+                socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
+                datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
+                print(datos_recibidos.decode(Constantes.formato_decodificacion))
+            else:
+                print("Debe logearse primero\n")
         else:
             print("Opcion invalida, intenta de nuevo\n")
-            opcion = menu()
 
 def menu():
     print("OPCION REGISTRAR: Para registrar un nuevo proveedor ingresa REGISTRAR nombre_proveedor contraseña_proveedor")
     print("OPCION CONECTAR: Para conectarse como proveedor ingresa CONECTAR nombre_proveedor contraseña_proveedor")
-    print("OPCION CREAR_CANAL: Crear un nuevo canal")
-    print("OPCION LISTAR_CANAL: Listado de canales en el MOM")
-    print("OPCION BORRAR_CANAL: Eliminar un canal del MOM")
-    print("OPCION CREAR_TAREA: Crear una nueva tarea")
-    print("OPCION LISTAR_TAREAS: Listado de las tareas en cola en el MOM")
-    print("OPCION SALIR: Desconectar aplicación")
+    if(token != ""):
+        print("OPCION CREAR_CANAL: Crear un nuevo canal")
+        print("OPCION LISTAR_CANAL: Listado de canales en el MOM")
+        print("OPCION BORRAR_CANAL: Eliminar un canal del MOM")
+        print("OPCION CREAR_TAREA: Crear una nueva tarea")
+        print("OPCION LISTAR_TAREAS: Listado de las tareas en cola en el MOM")
+        print("OPCION DESCONECTAR_PROVEEDOR: Desconectar el proveedor")
+        print("OPCION SALIR: Desconectar aplicación")
     opcion = input("Ingrese la opcion que quiere realizar ")
     while(not(str(opcion).split()[0] in ConstantesProveedor.constantes_proveedor)):
         opcion = input("Comando inválido. Ingrese la opcion que quiere realizar ")

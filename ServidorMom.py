@@ -20,7 +20,7 @@ class Mom:
 	def __init__(self):
 		self.MOM_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-		self.sesiones_proveedor = {} # este es el de proveedores
+		self.sesiones_proveedor = {}
 		self.sesiones_consumidor = {}
 		self.contador_tokens = 1
 
@@ -90,6 +90,13 @@ class Mom:
 					respuesta = f'Respuesta para: {direccion_aplicacion[0]} no hay un proveedor con el nombre de {arreglo[1]}'
 					conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
 					print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
+
+			elif (opcion == ConstantesServidor.desconectar_proveedor):
+				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
+				respuesta = f'Respuesta para: {direccion_aplicacion[0]} Se deconectó de proveedores, vuelva pronto\n'
+				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+				print(f'La aplicación {direccion_aplicacion[0]}:{direccion_aplicacion[1]} se desconectó correctamente')
+
 			# loggin y registro para consumidores
 			elif (opcion == ConstantesServidor.registrar_consumidor):
 				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
@@ -135,6 +142,22 @@ class Mom:
 					respuesta = f'Respuesta para: {direccion_aplicacion[0]} no hay un consumidor con el nombre de {arreglo[1]}'
 					conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
 					print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
+
+			elif (opcion == ConstantesServidor.desconectar_consumidor):
+				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
+				valores = list(self.sesiones_consumidor.values())
+				posicion_llave = valores.index(arreglo[1])
+				consumidor_a_eliminar = list(self.sesiones_consumidor.keys())[posicion_llave]
+				print(self.canales)
+				for canal in self.canales:
+					consumidores = self.canales[canal].get_consumidores()
+					if(arreglo[1] in consumidores):
+						consumidores.pop(arreglo[1])
+				print(self.canales)
+				respuesta = f'El consumidor {consumidor_a_eliminar} se desconectó correctamente \n'
+				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+				print(f'La aplicación {direccion_aplicacion[0]}:{direccion_aplicacion[1]} se desconectó correctamente')
+
 			elif (opcion == ConstantesServidor.crear_canal):
 				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
 				c_canal = Canal(arreglo[1], arreglo[2], self.contador)
@@ -186,6 +209,38 @@ class Mom:
 				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
 				print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
 
+			elif (opcion == ConstantesServidor.listar_tareas_r):
+				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
+				respuesta = f'Respuesta para: {direccion_aplicacion[0]} Listado de tareas realizadas\n'
+				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+				respuesta = ''
+				if (len(self.tareas_realizadas) == 0):
+					respuesta = 'No hay tareas realizadas en el MOM\n'
+				else:
+					for tarea in self.tareas_realizadas:
+						respuesta = respuesta + tarea + '\n'
+
+				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+				print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
+			elif (opcion == ConstantesServidor.asignar_tarea):
+				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
+				respuesta = f'Respuesta para: {direccion_aplicacion[0]} Listado de tareas\n'
+				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+				respuesta = ''
+				if (len(self.tareas) == 0):
+					respuesta = 'No hay tareas en el MOM\n'
+				else:
+					tarea = self.tareas.pop(0)
+					respuesta = respuesta + f'{tarea.get_id()}:{tarea.get_nombre()}\n'
+
+				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+				print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
+
+			elif (opcion == ConstantesServidor.tarea_realizada):
+				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
+				respuesta = f'Respuesta para: {direccion_aplicacion[0]} Mensaje recibido\n'
+				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+				self.tareas_realizadas.append(f'{arreglo[1]}:{arreglo[2]} - Tiempo de ejecucion: {arreglo[3]}')
 			elif (opcion == ConstantesServidor.borrar_canal):
 				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
 				id_canal = arreglo[2]

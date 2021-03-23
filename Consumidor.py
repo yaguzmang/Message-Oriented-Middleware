@@ -24,19 +24,27 @@ def main():
         if opcion == '':
             print("Opcion invalida, intenta de nuevo\n")
         elif (opcion == ConstantesConsumidor.conectar_consumidor):
-            nombre_canal = input("Ingresa el nombre del canal al que te quieres conectar ")
-            id_canal = input("Ingresa el id del canal al que te quieres conectar ")
-            envio_MOM = opcion + ' ' + nombre_canal + ' ' + id_canal + ' ' + token 
-            socket_consumidor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
-            datos_recibidos = socket_consumidor.recv(Constantes.tamaño_buffer)
-            print(datos_recibidos.decode(Constantes.formato_decodificacion))
+            if (token != ""):
+                nombre_canal = input("Ingresa el nombre del canal al que te quieres conectar ")
+                id_canal = input("Ingresa el id del canal al que te quieres conectar ")
+                envio_MOM = opcion + ' ' + nombre_canal + ' ' + id_canal + ' ' + token
+                socket_consumidor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
+                datos_recibidos = socket_consumidor.recv(Constantes.tamaño_buffer)
+                print(datos_recibidos.decode(Constantes.formato_decodificacion))
+            else:
+                print("Debe logearse primero\n")
+
         elif (opcion == ConstantesConsumidor.listar_canal):
-            envio_MOM = opcion
-            socket_consumidor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
-            datos_recibidos = socket_consumidor.recv(Constantes.tamaño_buffer)
-            print(datos_recibidos.decode(Constantes.formato_decodificacion))
-            datos_recibidos = socket_consumidor.recv(Constantes.tamaño_buffer)
-            print(datos_recibidos.decode(Constantes.formato_decodificacion))
+            if (token != ""):
+                envio_MOM = opcion
+                socket_consumidor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
+                datos_recibidos = socket_consumidor.recv(Constantes.tamaño_buffer)
+                print(datos_recibidos.decode(Constantes.formato_decodificacion))
+                datos_recibidos = socket_consumidor.recv(Constantes.tamaño_buffer)
+                print(datos_recibidos.decode(Constantes.formato_decodificacion))
+            else:
+                print("Debe logearse primero\n")
+
         elif (opcion.split()[0] == ConstantesConsumidor.registrar):
             envio_MOM = opcion
             socket_consumidor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
@@ -63,6 +71,18 @@ def main():
                 socket_consumidor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
                 datosRecibidos = socket_consumidor.recv(Constantes.tamaño_buffer)
                 print(datosRecibidos.decode(Constantes.formato_decodificacion))
+            else:
+                print("Debe logearse primero\n")
+
+        elif (opcion.split()[0] == ConstantesConsumidor.desconectar):
+            if (token != ""):
+                envio_MOM = opcion + " " + token
+                socket_consumidor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
+                datosRecibidos = socket_consumidor.recv(Constantes.tamaño_buffer)
+                print(datosRecibidos.decode(Constantes.formato_decodificacion))
+            else:
+                print("Debe logearse primero\n")
+
         else:
             print("Opción invalida, intenta de nuevo\n")
         opcion = menu()
@@ -76,9 +96,11 @@ def main():
 def menu():
     print("OPCION REGISTRAR_CONSUMIDOR: Para registrar un nuevo proveedor ingresa REGISTRAR_CONSUMIDOR nombre_proveedor contraseña_proveedor")
     print("OPCION CONECTAR_CONSUMIDOR: Para conectarse como proveedor ingresa CONECTAR_CONSUMIDOR nombre_proveedor contraseña_proveedor")
-    print("OPCION LISTAR: Listado de Colas en el MOM")
-    print("OPCION CONECTAR_CONSUMIDOR_CANAL: Conexión a una Cola del MOM")
-    print("OPCION SALIR: Desconectar aplicación")
+    if (token != ""):
+        print("OPCION LISTAR: Listado de Colas en el MOM")
+        print("OPCION CONECTAR_CONSUMIDOR_CANAL: Conexión a una Cola del MOM")
+        print("OPCION DESCONECTAR_CONSUMIDOR: Desconectar consumidor")
+        print("OPCION SALIR: Desconectar aplicación")
     opcion = input("Ingrese la opcion que quiere realizar ")
     return opcion
 
