@@ -129,6 +129,7 @@ def menu():
     print("*"*50)
     print("OPCION REGISTRAR_CONSUMIDOR: Para registrar un nuevo proveedor ingresa REGISTRAR_CONSUMIDOR nombre_consumidor contraseña_consumidor")
     print("OPCION CONECTAR_CONSUMIDOR: Para conectarse como proveedor ingresa CONECTAR_CONSUMIDOR nombre_consumidor contraseña_consumidor")
+    print("OPCION SALIR: Desconectar aplicación")
     if (token != ""):
         print("OPCION LISTAR: Listado de Colas en el MOM")
         print("OPCION CONECTAR_CONSUMIDOR_CANAL: Conexión a una Cola del MOM")
