@@ -139,6 +139,7 @@ def main():
             print("Opcion invalida, intenta de nuevo\n")
 
 def menu():
+    print("*"*50)
     print("OPCION REGISTRAR: Para registrar un nuevo proveedor ingresa REGISTRAR nombre_proveedor contraseña_proveedor")
     print("OPCION CONECTAR: Para conectarse como proveedor ingresa CONECTAR nombre_proveedor contraseña_proveedor")
     if(token != ""):
@@ -149,6 +150,7 @@ def menu():
         print("OPCION LISTAR_TAREAS: Listado de las tareas en cola en el MOM")
         print("OPCION DESCONECTAR_PROVEEDOR: Desconectar el proveedor")
         print("OPCION SALIR: Desconectar aplicación")
+    print("*"*50)
     opcion = input("Ingrese la opcion que quiere realizar ")
     while(not(str(opcion).split()[0] in ConstantesProveedor.constantes_proveedor)):
         opcion = input("Comando inválido. Ingrese la opcion que quiere realizar ")
