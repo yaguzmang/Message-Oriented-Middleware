@@ -26,6 +26,7 @@ class Mom:
 
 		self.canales = {}
 		self.tareas = []
+		self.tareas_realizadas = []
 		self.contador = 0
 		self.contador_tareas = 0
 		self.consumidores_conectados = {}
@@ -164,7 +165,6 @@ class Mom:
 
 			elif (opcion == ConstantesServidor.crear_tarea):
 				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
-				#c_tarea = Tarea(arreglo[1], arreglo[2], self.contador)
 				c_tarea = Tarea(arreglo[1], self.contador_tareas)
 				self.tareas.append(c_tarea)
 				respuesta = f'Respuesta para: {direccion_aplicacion[0]} La tarea fue creada correctamente\n con el nombre {arreglo[1]} No olvide el token de identificacion de la tarea: {self.contador_tareas}\n'
@@ -172,7 +172,7 @@ class Mom:
 				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
 				print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
 
-			elif (opcion == ConstantesServidor.listar_tareas_cola):
+			elif (opcion == ConstantesServidor.listar_tareas):
 				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
 				respuesta = f'Respuesta para: {direccion_aplicacion[0]} Listado de tareas\n'
 				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
@@ -181,9 +181,7 @@ class Mom:
 					respuesta = 'No hay tareas en el MOM\n'
 				else:
 					for tarea in self.tareas:
-						id_tarea = tarea
-						if(self.tareas[id_tarea].get_clave_acceso() == arreglo[1]):
-							respuesta = respuesta + f'Tarea {self.tareas[id_tarea].get_id()}: {self.tareas[id_tarea].get_nombre()}\n'
+						respuesta = respuesta + f'Tarea {tarea.get_id()}: {tarea.get_nombre()}\n'
 
 				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
 				print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
@@ -252,7 +250,6 @@ class Mom:
 					nombre_auxiliar = self.canales[int(id_canal)].get_nombre()
 					id_auxiliar = self.canales[int(id_canal)].get_id()
 					token_proveedor_aux = self.canales[int(id_canal)].get_token_proveedor()
-					
 					if (str(id_canal) == str(id_auxiliar) and str(nombre_canal) == str(nombre_auxiliar) and str(token_proveedor) == str(token_proveedor_aux)):
 						consumidores = self.canales[int(id_canal)].get_consumidores()
 						for clave in consumidores.keys():
