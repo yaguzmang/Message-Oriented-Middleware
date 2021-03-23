@@ -16,3 +16,4 @@ comandos = Fore.CYAN + Style.BRIGHT
 error = Fore.RED + Style.BRIGHT
 exito = Fore.GREEN + Style.BRIGHT
 entradas = Fore.YELLOW + Style.BRIGHT
+blanco = Fore.WHITE + Style.BRIGHT
