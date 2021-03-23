@@ -8,6 +8,7 @@ import Constantes
 import ConstantesConsumidor
 import time
 import random
+from colorama import init
 
 class Server:
     def __init__(self):
@@ -54,8 +55,9 @@ def main():
     server()
     
 def server():
-	server = Server()
-	server.run_app()
+    server = Server()
+    server.run_app()
 
 if __name__ == '__main__':
-	server()
+    init()
+    server()

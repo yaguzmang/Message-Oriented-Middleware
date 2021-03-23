@@ -7,6 +7,7 @@ Created on Created on Sun Mar 21 2021
 import socket
 import Constantes
 import ConstantesProveedor
+from colorama import init
 socket_proveedor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 token = ""
 
@@ -34,17 +35,29 @@ def main():
             print(datosRecibidos.decode(Constantes.formato_decodificacion))
 
         elif (opcion.split()[0] == ConstantesProveedor.conectar):
-            envio_MOM = opcion
-            socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
-            datosRecibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
-            respuesta= datosRecibidos.decode(Constantes.formato_decodificacion)
-            if(respuesta[0:6] == "token="):
-                token = respuesta[6:]
-                print("Bienvenido "+ opcion.split()[1])
-            elif(respuesta == "Contraseña incorrecta"):
-                print("Contraseña incorrecta para el proveedor " + opcion.split()[1])
+            if (token == ""):
+                try:
+                    arreglo0 = opcion[0]
+                    arreglo1 = opcion[1]
+                    arreglo2 = opcion[2]
+                    if(arreglo0 != "" and arreglo1 != "" and arreglo2 != ""):
+                        envio_MOM = opcion
+                        socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
+                        datosRecibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
+                        respuesta= datosRecibidos.decode(Constantes.formato_decodificacion)
+                        if(respuesta[0:6] == "token="):
+                            token = respuesta[6:]
+                            print("Bienvenido "+ opcion.split()[1])
+                        elif(respuesta == "Contraseña incorrecta"):
+                            print("Contraseña incorrecta para el proveedor " + opcion.split()[1])
+                        else:
+                            print("No existe un proveedor que se llame " + opcion.split()[1])
+                    else:
+                        print("Llene correctamente los campos nombre_proveedor y contraseña_proveedor\n")
+                except:
+                    print("Recuerde que la sintaxis es CONECTAR nombre_proveedor contraseña_proveedor\n")
             else:
-                print("No existe un proveedor que se llame " + opcion.split()[1])
+                print("Debe desconectarse primero\n")
 
         elif (opcion.split()[0] == ConstantesProveedor.desconectar):
             if (token != ""):
@@ -139,6 +152,7 @@ def main():
             print("Opcion invalida, intenta de nuevo\n")
 
 def menu():
+    print(Constantes.comandos)
     print("*"*50)
     print("OPCION REGISTRAR: Para registrar un nuevo proveedor ingresa REGISTRAR nombre_proveedor contraseña_proveedor")
     print("OPCION CONECTAR: Para conectarse como proveedor ingresa CONECTAR nombre_proveedor contraseña_proveedor")
@@ -158,4 +172,5 @@ def menu():
 
 
 if __name__ == '__main__':
+    init()
     main()

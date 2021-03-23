@@ -7,6 +7,7 @@ Created on Created on Sun Mar 21 2021
 import socket
 import Constantes
 import ConstantesConsumidor
+from colorama import init
 
 socket_consumidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 token = ""
@@ -52,17 +53,30 @@ def main():
             print(datosRecibidos.decode(Constantes.formato_decodificacion))
 
         elif (opcion.split()[0] == ConstantesConsumidor.conectar):
-            envio_MOM = opcion
-            socket_consumidor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
-            datosRecibidos = socket_consumidor.recv(Constantes.tamaño_buffer)
-            respuesta= datosRecibidos.decode(Constantes.formato_decodificacion)
-            if(respuesta[0:6] == "token="):
-                token = respuesta[6:]
-                print("Bienvenido "+ opcion.split()[1])
-            elif(respuesta == "Contraseña incorrecta"):
-                print("Contraseña incorrecta para el proveedor " + opcion.split()[1])
+            if (token == ""):
+                try:
+                    arreglo0 = opcion[0]
+                    arreglo1 = opcion[1]
+                    arreglo2 = opcion[2]
+                    if (arreglo0 != "" and arreglo1 != "" and arreglo2 != ""):
+                        envio_MOM = opcion
+                        socket_consumidor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
+                        datosRecibidos = socket_consumidor.recv(Constantes.tamaño_buffer)
+                        respuesta= datosRecibidos.decode(Constantes.formato_decodificacion)
+                        if(respuesta[0:6] == "token="):
+                            token = respuesta[6:]
+                            print("Bienvenido "+ opcion.split()[1])
+                        elif(respuesta == "Contraseña incorrecta"):
+                            print("Contraseña incorrecta para el consumidor " + opcion.split()[1])
+                        else:
+                            print("No existe un consumidor que se llame " + opcion.split()[1])
+                    else:
+                        print("Llene correctamente los campos nombre_consumidor y contraseña_consumidor\n")
+                except:
+                    print("Recuerde que la sintaxis es CONECTAR_CONSUMIDOR nombre_consumidor contraseña_consumidor\n")
             else:
-                print("No existe un proveedor que se llame " + opcion.split()[1])
+                print("Debe desconectarse primero\n")
+
         elif (opcion == ConstantesConsumidor.recibir_mensaje):
             if(token != ""):
                 nombre_canal = input("Ingresa el nombre del canal del cual quieres recibir un mensaje ")
@@ -95,8 +109,8 @@ def main():
 
 def menu():
     print("*"*50)
-    print("OPCION REGISTRAR_CONSUMIDOR: Para registrar un nuevo proveedor ingresa REGISTRAR_CONSUMIDOR nombre_proveedor contraseña_proveedor")
-    print("OPCION CONECTAR_CONSUMIDOR: Para conectarse como proveedor ingresa CONECTAR_CONSUMIDOR nombre_proveedor contraseña_proveedor")
+    print("OPCION REGISTRAR_CONSUMIDOR: Para registrar un nuevo proveedor ingresa REGISTRAR_CONSUMIDOR nombre_consumidor contraseña_consumidor")
+    print("OPCION CONECTAR_CONSUMIDOR: Para conectarse como proveedor ingresa CONECTAR_CONSUMIDOR nombre_consumidor contraseña_consumidor")
     if (token != ""):
         print("OPCION LISTAR: Listado de Colas en el MOM")
         print("OPCION CONECTAR_CONSUMIDOR_CANAL: Conexión a una Cola del MOM")
@@ -108,4 +122,5 @@ def menu():
 
 
 if __name__ == '__main__':
+    init()
     main()

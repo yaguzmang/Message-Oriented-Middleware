@@ -15,6 +15,7 @@ import string
 import random
 from Canal import Canal
 from Tarea import Tarea
+from colorama import init
 class Mom:
 
 	def __init__(self):
@@ -403,4 +404,5 @@ def mom():
 	mom.main()
 
 if __name__ == '__main__':
+	init()
 	mom()
