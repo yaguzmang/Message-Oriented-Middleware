@@ -16,4 +16,7 @@ listar_tareas = "LISTAR_TAREAS"
 listar_tareas_r = "LISTAR_TAREAS_R"
 borrar_canal = "BORRAR_CANAL"
 asignar_tarea = "ASIGNAR_TAREA"
+desconectar_proveedor = "DESCONECTAR_PROVEEDOR"
+desconectar_consumidor = "DESCONECTAR_CONSUMIDOR"
 tarea_realizada = "TAREA_REALIZADA"
+
