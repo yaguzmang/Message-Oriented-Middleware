@@ -209,6 +209,38 @@ class Mom:
 				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
 				print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
 
+			elif (opcion == ConstantesServidor.listar_tareas_r):
+				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
+				respuesta = f'Respuesta para: {direccion_aplicacion[0]} Listado de tareas realizadas\n'
+				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+				respuesta = ''
+				if (len(self.tareas_realizadas) == 0):
+					respuesta = 'No hay tareas realizadas en el MOM\n'
+				else:
+					for tarea in self.tareas_realizadas:
+						respuesta = respuesta + tarea + '\n'
+
+				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+				print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
+			elif (opcion == ConstantesServidor.asignar_tarea):
+				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
+				respuesta = f'Respuesta para: {direccion_aplicacion[0]} Listado de tareas\n'
+				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+				respuesta = ''
+				if (len(self.tareas) == 0):
+					respuesta = 'No hay tareas en el MOM\n'
+				else:
+					tarea = self.tareas.pop(0)
+					respuesta = respuesta + f'{tarea.get_id()}:{tarea.get_nombre()}\n'
+
+				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+				print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
+
+			elif (opcion == ConstantesServidor.tarea_realizada):
+				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
+				respuesta = f'Respuesta para: {direccion_aplicacion[0]} Mensaje recibido\n'
+				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+				self.tareas_realizadas.append(f'{arreglo[1]}:{arreglo[2]} - Tiempo de ejecucion: {arreglo[3]}')
 			elif (opcion == ConstantesServidor.borrar_canal):
 				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
 				id_canal = arreglo[2]

@@ -100,6 +100,17 @@ def main():
             else:
                 print("Debe logearse primero\n")
 
+        elif (opcion == ConstantesProveedor.listar_tareas_r):
+            if(token != ""):
+                envio_MOM = opcion +' '+ token
+                socket_proveedor.send(bytes(envio_MOM, Constantes.formato_decodificacion))
+                datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
+                print(datos_recibidos.decode(Constantes.formato_decodificacion))
+                datos_recibidos = socket_proveedor.recv(Constantes.tamaño_buffer)
+                print(datos_recibidos.decode(Constantes.formato_decodificacion))
+            else:
+                print("Debe logearse primero\n")
+
         elif (opcion == ConstantesProveedor.borrar_canal):
             if (token != ""):
                 envio_MOM = opcion + ' ' + token
