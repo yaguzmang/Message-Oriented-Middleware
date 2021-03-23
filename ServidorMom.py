@@ -20,7 +20,7 @@ class Mom:
 	def __init__(self):
 		self.MOM_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-		self.sesiones_proveedor = {} # este es el de proveedores
+		self.sesiones_proveedor = {}
 		self.sesiones_consumidor = {}
 		self.contador_tokens = 1
 
@@ -90,6 +90,13 @@ class Mom:
 					respuesta = f'Respuesta para: {direccion_aplicacion[0]} no hay un proveedor con el nombre de {arreglo[1]}'
 					conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
 					print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
+
+			elif (opcion == ConstantesServidor.desconectar_proveedor):
+				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
+				respuesta = f'Respuesta para: {direccion_aplicacion[0]} Se deconectó de proveedores, vuelva pronto\n'
+				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+				print(f'La aplicación {direccion_aplicacion[0]}:{direccion_aplicacion[1]} se desconectó correctamente')
+
 			# loggin y registro para consumidores
 			elif (opcion == ConstantesServidor.registrar_consumidor):
 				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
@@ -135,6 +142,22 @@ class Mom:
 					respuesta = f'Respuesta para: {direccion_aplicacion[0]} no hay un consumidor con el nombre de {arreglo[1]}'
 					conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
 					print(f'Se envio respuesta a: {direccion_aplicacion[0]} por la solicitud: {opcion}')
+
+			elif (opcion == ConstantesServidor.desconectar_consumidor):
+				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
+				valores = list(self.sesiones_consumidor.values())
+				posicion_llave = valores.index(arreglo[1])
+				consumidor_a_eliminar = list(self.sesiones_consumidor.keys())[posicion_llave]
+				print(self.canales)
+				for canal in self.canales:
+					consumidores = self.canales[canal].get_consumidores()
+					if(arreglo[1] in consumidores):
+						consumidores.pop(arreglo[1])
+				print(self.canales)
+				respuesta = f'El consumidor {consumidor_a_eliminar} se desconectó correctamente \n'
+				conexion_aplicacion.sendall(respuesta.encode(Constantes.formato_decodificacion))
+				print(f'La aplicación {direccion_aplicacion[0]}:{direccion_aplicacion[1]} se desconectó correctamente')
+
 			elif (opcion == ConstantesServidor.crear_canal):
 				print(f'{direccion_aplicacion[0]} solicita: {opcion}')
 				c_canal = Canal(arreglo[1], arreglo[2], self.contador)
