@@ -8,6 +8,7 @@ import Constantes
 import ConstantesConsumidor
 import time
 import random
+from colorama import init
 
 class Server:
     def __init__(self):
@@ -18,21 +19,23 @@ class Server:
         print("SERVER RUNNING\n")
         tarea_fue_realizada = False
         while True:
-            if not tarea_fue_realizada:
-                self.socket_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                self.socket_server.connect((Constantes.direccion_conexion_consumidor, Constantes.puerto))
-                tupla_conexion = self.socket_server.getsockname()
+            self.socket_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.socket_server.connect((Constantes.direccion_conexion_consumidor, Constantes.puerto))
+            tupla_conexion = self.socket_server.getsockname()
+            print(Constantes.blanco)
             print("SERVER CONNECTED: ", tupla_conexion)
             envio_MOM = ConstantesConsumidor.asignar_tarea
             self.socket_server.send(bytes(envio_MOM, Constantes.formato_decodificacion))
             datos_recibidos = self.socket_server.recv(Constantes.tamaño_buffer)
             print(datos_recibidos.decode(Constantes.formato_decodificacion))
             datos_recibidos = self.socket_server.recv(Constantes.tamaño_buffer)
+            print(Constantes.exito)
             print('Mensaje recibido')
             respuesta = datos_recibidos.decode(Constantes.formato_decodificacion)
             if respuesta.lower().strip() == "No hay tareas en el MOM".lower().strip():
                tarea_fue_realizada = False
                print(respuesta)
+               self.socket_server.close()
                time.sleep(5)
             else:
                 print("Tarea a realizar: " + respuesta)
@@ -48,13 +51,15 @@ class Server:
                 self.socket_server.send(bytes(envio_MOM, Constantes.formato_decodificacion))
                 datos_recibidos = self.socket_server.recv(Constantes.tamaño_buffer)
                 respuesta = datos_recibidos.decode(Constantes.formato_decodificacion)
+                self.socket_server.close()
                 print(respuesta)
 def main():
     server()
     
 def server():
-	server = Server()
-	server.run_app()
+    server = Server()
+    server.run_app()
 
 if __name__ == '__main__':
-	server()
+    init()
+    server()
