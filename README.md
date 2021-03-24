@@ -1,7 +1,7 @@
 # Message-Oriented-Middleware :e-mail:
 Implementation of a Message-Oriented Middleware 
 
-## Developers
+## Developers :black_nib:
 - Daniel Felipe Gómez Martínez
 > dfgomezm@eafit.edu.co
 - Yhoan Alejandro Guzmán García
@@ -9,7 +9,7 @@ Implementation of a Message-Oriented Middleware
 - Juan Sebastián Pérez Salazar
 > jsperezs@eafit.du.co
 
-## Requerimientos
+## Requerimientos :memo:
 - La conexión y desconexión de los usuarios es autenticada para proveedores y consumidores, los servers no se autentican. 
 - Un canal solo puede ser eliminado si no se encuentran consumidores conectados a este.
 - Si un usuario se desconecta, las colas que este posea en los diferentes canales en los que estaba conectado serán eliminadas, independientemente de si había mensajes en ella.
@@ -18,7 +18,8 @@ Implementation of a Message-Oriented Middleware
 - La única persistencia que se maneja es la de los usuarios proveedor y consumidor, cuyos datos son almacenados en archivos para su posterior uso independientemente de sí el MOM se apaga o no. 
 - El servidor es tolerante a fallos, por lo que cualquier error que pueda presentarse este lo maneja de manera adecuada para evitar desconexiones.
 
-## Funcionalidad
+## Funcionalidad :computer:
+
 ### Funcionamiento de los task:
 Desde el cliente Proveedor se pueden hacer las siguientes acciones:  
 
@@ -46,7 +47,7 @@ Cuando el proveedor envía un mensaje al canal, el MOM en un hilo individual, re
 
 Los consumidores a su vez pueden listar todos los canales que haya disponibles para conectarse y así poder verificar el id del canal al cual quiere conectarse. En el momento en el que un consumidor se desconecta de un canal, la cola que este tenga asignada en dicho canal será eliminada, independientemente de los mensajes que se encuentren dentro de esta. La eliminación y ubicación de estas colas se puede realizar gracias a que, en los canales, los consumidores son almacenados en un diccionario, donde la clave es el token del consumidor y el valor es una lista con los mensajes que este reciba por parte del proveedor.
 
-## Diseño del sistema
+## Diseño del sistema :card_index:
 
 El diseño elegido que se planteó para la realización del aplicativo es el siguiente:
 [![Servidor Mom](https://github.com/yaguzmang/Message-Oriented-Middleware/blob/main/Diagramas/servidor_mom.png?raw=true "Servidor Mom")](http://https://github.com/yaguzmang/Message-Oriented-Middleware/blob/main/Diagramas/servidor_mom.png "Servidor Mom")
@@ -54,11 +55,11 @@ El diseño elegido que se planteó para la realización del aplicativo es el sig
 
 Acá se puede evidenciar que hay 3 usuarios, los proveedores, los consumidores y los servers, los proveedores y los consumidores poseen una identificación única que se denomina como token, existe una cola para tareas por realizar y una cola para tareas realizadas en el MOM al igual que un espacio para la creación de canales, donde cada canal contiene una cola por consumidor conectado al mismo. En el diagrama se detallan las acciones que puede realizar cada usuario al igual que la forma en que se da la interacción.
 
-## Arquitectura del sistema
+## Arquitectura del sistema :triangular_ruler:
 [![Arquitectura del sistema](https://github.com/yaguzmang/Message-Oriented-Middleware/blob/main/Diagramas/arquitectura.jpeg?raw=true "Arquitectura del sistema")](http://https://github.com/yaguzmang/Message-Oriented-Middleware/blob/main/Diagramas/arquitectura.jpeg "Arquitectura del sistema")
 **Imagen 2** - Arquitectura general del MOM
 
-## Implementación
+## Implementación :round_pushpin:
 EL servidor _MOM_ se aloja en una máquina virtual de AWS la cual fue configurada con una VPC y una subred por default porque en este caso lo que verdaderamente necesita de una configuración específica es agregar los puertos de comunicación con la máquina en el grupo de seguridad:
 
 [![GrupoSeguridad](https://github.com/yaguzmang/Message-Oriented-Middleware/blob/main/Diagramas/grupoDeSeguridad.PNG?raw=true "GrupoSeguridad")](http://https://github.com/yaguzmang/Message-Oriented-Middleware/blob/main/Diagramas/grupoDeSeguridad.PNG "GrupoSeguridad")
@@ -69,7 +70,7 @@ Lo fundamental en los grupos de seguridad es abrir el puerto **8080** ya que por
 [![Constantes](https://github.com/yaguzmang/Message-Oriented-Middleware/blob/main/Diagramas/codigoConstantes.PNG?raw=true "Constantes")](http://https://github.com/yaguzmang/Message-Oriented-Middleware/blob/main/Diagramas/codigoConstantes.PNG "Constantes")
 **Imagen 4** - Código de las constantes
 
-## Uso
+## Uso :mag:
 ### Comandos del proveedor
 
 - **Registrarse:** por medio de este comando un proveedor puede registrarse en el MOM para posteriormente poder conectarse.
