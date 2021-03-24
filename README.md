@@ -12,7 +12,7 @@ Implementation of a Message-Oriented Middleware
 ## Requerimientos :memo:
 - La conexión y desconexión de los usuarios es autenticada para proveedores y consumidores, los servers no se autentican. 
 - Un canal solo puede ser eliminado si no se encuentran consumidores conectados a este.
-- Si un usuario se desconecta, las colas que este posea en los diferentes canales en los que estaba conectado serán eliminadas, independientemente de si había mensajes en ella.
+- Si un consumidor se desconecta, las colas que este posea en los diferentes canales en los que estaba conectado serán eliminadas, independientemente de si había mensajes en ella.
 - Los canales y las colas dentro de los canales están asociados a un token de proveedor y a un token de consumidor respectivamente.
 - La recepción de los mensajes se hace por medio de un mecanismo pull, al igual que la recepción de mensajes por parte de los servers. 
 - La única persistencia que se maneja es la de los usuarios proveedor y consumidor, cuyos datos son almacenados en archivos para su posterior uso independientemente de sí el MOM se apaga o no. 
