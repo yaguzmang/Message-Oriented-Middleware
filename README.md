@@ -1,4 +1,4 @@
-# Message-Oriented-Middleware
+# Message-Oriented-Middleware :e-mail:
 Implementation of a Message-Oriented Middleware 
 
 ## Developers
@@ -72,14 +72,21 @@ Lo fundamental en los grupos de seguridad es abrir el puerto **8080** ya que por
 ## Uso
 ### Comandos del proveedor
 
-- Conectarse: por medio de este comando un proveedor puede conectarse al MOM para realizar otras acciones como crear un canal.
+- **Registrarse:** por medio de este comando un proveedor puede registrarse en el MOM para posteriormente poder conectarse.
+
+	**Estructura**
+	```sh
+	REGISTRAR [nombre usuario] [password] ↵ (Enter)
+	```
+
+- **Conectarse:** por medio de este comando un proveedor puede conectarse al MOM para realizar otras acciones como crear un canal.
 
 	**Estructura**
 	```sh
 	CONECTAR [nombre usuario] [password] ↵ (Enter)
 	```
 
-- Crear canal: por medio de este comando un proveedor puede crear una tarea para ser puesta en cola en el MOM. 
+- **Crear canal:** por medio de este comando un proveedor puede crear una tarea para ser puesta en cola en el MOM. 
 
 	**Estructura**
 	```sh
@@ -87,14 +94,14 @@ Lo fundamental en los grupos de seguridad es abrir el puerto **8080** ya que por
 	[nombre del canal] ↵ (Enter)
 	```
 
-- Listar canales: Por medio de este comando un proveedor puede listar los canales que se encuentren asociados a su token.
+- **Listar canales:** Por medio de este comando un proveedor puede listar los canales que se encuentren asociados a su token.
 
 	**Estructura**
 	```sh
 	LISTAR_CANAL ↵ (Enter)
 	```
 
-- Borrar canal: Por medio de este comando un proveedor puede borrar un canal que se encuentre asociado a su token siempre y cuando este canal no tenga ningún consumidor conectado.
+- **Borrar canal:** Por medio de este comando un proveedor puede borrar un canal que se encuentre asociado a su token siempre y cuando este canal no tenga ningún consumidor conectado.
 
 	**Estructura**
 	```sh
@@ -103,5 +110,104 @@ Lo fundamental en los grupos de seguridad es abrir el puerto **8080** ya que por
 	[id del canal] ↵ (Enter)
 	```
 
+- **Enviar mensaje a un canal:** Por medio de este comando un proveedor puede enviar un mensaje a un canal especifico.
+
+	**Estructura**
+	```sh
+	ENVIAR_MENSAJE_CANAL ↵ (Enter)
+	[nombre del canal] ↵ (Enter)
+	[id del canal] ↵ (Enter)
+	[mensaje] ↵ (Enter)
+	```
+
+- **Crear una tarea:** por medio de este comando un proveedor puede crear una tarea para ser puesta en cola en el MOM.
+
+	**Estructura**
+	```sh
+	CREAR_TAREA ↵ (Enter)
+	[nombre de la tarea] ↵ (Enter)
+	```
+
+- **Listar tareas:** Por medio de este comando un proveedor puede listar las tareas que se encuentran en cola en el MOM.
+
+	**Estructura**
+	```sh
+	LISTAR_TAREAS ↵ (Enter)
+	```
+
+- **Listar tareas realizadas:** Por medio de este comando un proveedor puede listar las tareas que ya han sido realizadas.
+
+	**Estructura**
+	```sh
+	LISTAR_TAREAS_R ↵ (Enter)
+	```
+
+- **Desconectarse:** Por medio de este comando un proveedor puede desconectarse del MOM.
+
+	**Estructura**
+	```sh
+	DESCONECTAR ↵ (Enter)
+	```
+
+- **Salir:** Por medio de este comando un proveedor puede cerrar la aplicación _Proveedor_.
+
+	**Estructura**
+	```sh
+	SALIR ↵ (Enter)
+	```
+
+### Comandos del consumidor
+- **Registrarse:** por medio de este comando un consumidor puede registrarse en el MOM para posteriormente poder conectarse.
+
+	**Estructura**
+	```sh
+	REGISTRAR_CONSUMIDOR [nombre usuario] [password] ↵ (Enter)
+	```
+
+- **Conectarse:** por medio de este comando un consumidor puede conectarse al MOM para realizar otras acciones como crear un canal.
+
+	**Estructura**
+	```sh
+	CONECTAR_CONSUMIDOR [nombre usuario] [password] ↵ (Enter)
+	```
+
+- **Listar canales:** por medio de este comando un consumidor puede listar todos los canales que hayan disponibles en el MOM para conectarse. 
+
+	**Estructura**
+	```sh
+	LISTAR_CANALES_CONSUMIDOR ↵ (Enter)
+	```
+
+- **Conectarse a un canal:** por medio de este comando un consumidor puede conectarse a un canal especifico para recibir mensajes de este.
+
+	**Estructura**
+	```sh
+	CONECTAR_CONSUMIDOR_CANAL ↵ (Enter)
+	[nombre del canal] ↵ (Enter)
+	[id del canal] ↵ (Enter)
+	```
+
+- **Recibir mensajes de un canal:** por medio de este comando un consumidor puede recibir mensajes de un canal, siempre y cuando haya mensajes en el mismo.
+
+	**Estructura**
+	```sh
+	RECIBIR_MENSAJE_CANAL ↵ (Enter)
+	[nombre del canal] ↵ (Enter)
+	[id del canal] ↵ (Enter)
+	```
+
+- **Desconectarse:** Por medio de este comando un consumidor puede desconectarse del MOM.
+
+	**Estructura**
+	```sh
+	DESCONECTAR_CONSUMIDOR ↵ (Enter)
+	```
+
+- **Salir:** Por medio de este comando un consumidor puede cerrar la aplicación _Consumidor_.
+
+	**Estructura**
+	```sh
+	SALIR ↵ (Enter)
+	```
 
 
