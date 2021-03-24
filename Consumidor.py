@@ -18,6 +18,7 @@ def main():
     socket_consumidor.connect((Constantes.direccion_conexion_consumidor, Constantes.puerto))
     tupla_conexion = socket_consumidor.getsockname()
     print("Tu dirección de conexión es: ", tupla_conexion)
+    token = ""
     opcion = menu()
 
     while opcion != ConstantesConsumidor.salir:
